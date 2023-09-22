@@ -36,19 +36,23 @@ def get_place_details(place_id):
     # Extracting required details
     name = place.get('name', '')
     city = ''
+    country = ''
     for component in place.get('address_components', []):
         if 'locality' in component['types']:
             city = component['long_name']
+        if 'country' in component['types']:
+            country = component['long_name']
     phone_number = place.get('formatted_phone_number', '')
     rating = place.get('rating', '')
     website = place.get('website', '')
+    google_maps_url = place.get('url', '')
 
-    return name, city, phone_number, rating, website
+    return name, city, country, phone_number, rating, website, google_maps_url
 
 def main():
     with open('Restaurants.csv', 'r') as infile, open('RestaurantsDetail.csv', 'w') as outfile:
         reader = csv.DictReader(infile)
-        fieldnames = ['Name', 'City', 'Phone Number', 'Google Star Rating', 'Website']
+        fieldnames = ['Name', 'City', 'Country', 'Phone Number', 'Google Star Rating', 'Website', 'Google Maps URL']
         writer = csv.DictWriter(outfile, fieldnames=fieldnames)
 
         writer.writeheader()
@@ -63,9 +67,11 @@ def main():
                     writer.writerow({
                         'Name': details[0],
                         'City': details[1],
-                        'Phone Number': details[2],
-                        'Google Star Rating': details[3],
-                        'Website': details[4],
+                        'Country': details[2],
+                        'Phone Number': details[3],
+                        'Google Star Rating': details[4],
+                        'Website': details[5],
+                        'Google Maps URL': details[6]
                     })
 
 if __name__ == '__main__':
